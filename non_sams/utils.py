@@ -6,6 +6,7 @@ import requests
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from blip2_utils.inference import get_blip2_caption
 
 def display_boxes(image, boxes):
     # Create figure and axes
@@ -146,13 +147,14 @@ def get_segment_captions(image, boxes):
         y2 = y2 + 10 if y2 + 10 < image.shape[0] else y2
         cropped = image[y1:y2, x1:x2]
         cropped = cv2.cvtColor(cropped, cv2.COLOR_RGB2BGR)
-        success, image_bytes = cv2.imencode('.jpg', cropped)
-        image_bytes = image_bytes.tobytes()
-
-        url = 'http://llama-server.webaverse.com:5447/caption'
-        headers = {'Content-Type': 'image/jpeg'}
-        response = requests.post(url, data=image_bytes, headers=headers)
-        caption = response.text
+        caption = get_blip2_caption(cropped)
+        # success, image_bytes = cv2.imencode('.jpg', cropped)
+        # image_bytes = image_bytes.tobytes()
+        #
+        # url = 'http://llama-server.webaverse.com:5447/caption'
+        # headers = {'Content-Type': 'image/jpeg'}
+        # response = requests.post(url, data=image_bytes, headers=headers)
+        # caption = response.text
         mask = {'bbox': (x1, y1, x2, y2), 'caption': caption}
         masks.append(mask)
 
