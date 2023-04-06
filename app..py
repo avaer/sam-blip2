@@ -41,39 +41,7 @@ def get_labeled_bbox(img_file: UploadFile = File(...)):
     print("Got", len(captions), "captions")
 
     # show results
-    fig, ax = plt.subplots(figsize=(20, 20))
-
-    for mask in masks[:int(len(masks))]:
-        x, y, w, h = mask['bbox']
-        x, y, w, h = int(x), int(y), int(w), int(h)
-        x = x - 10 if x - 10 > 0 else 0
-        y = y - 10 if y - 10 > 0 else 0
-        w = w + 10 if x + w + 10 < image.shape[1] else w
-        h = h + 10 if y + h + 10 < image.shape[0] else h
-
-        # draw bounding box and caption using matplotlib
-        rect = patches.Rectangle((x, y), w, h, linewidth=1, edgecolor='r', facecolor='none')
-        ax.add_patch(rect)
-
-        # put image caption in the center left of the bounding box
-        ax.text(x, y + h/2, mask['caption'], fontsize=12, color='red', horizontalalignment='left', verticalalignment='center')
-
-    # show image with all bounding boxes
-    ax.imshow(image)
-    ax.axis('off')
-
-    # Create a new image with the annotations added
-    fig.canvas.draw()
-    buf = fig.canvas.buffer_rgba()
-    new_image = np.asarray(buf)
-    new_image = cv2.cvtColor(new_image, cv2.COLOR_RGBA2BGR)
-
-    # turn new image to PIL image
-    new_image = Image.fromarray(new_image)
-
-    # Return the image as a response using StreamingResponse
-    return StreamingResponse(io.BytesIO(new_image.tobytes()), media_type="image/png")
-
+    return {"captions": captions}
 
 if __name__ == '__main__':
     import uvicorn
