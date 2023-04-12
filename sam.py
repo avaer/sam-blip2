@@ -17,7 +17,8 @@ from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamP
 sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
 sam.to(device=device)
 
-mask_generator = SamAutomaticMaskGenerator(sam)
+# mask_generator = SamAutomaticMaskGenerator(sam)
 
 def extract_masks(image):
+    mask_generator = SamAutomaticMaskGenerator(sam)
     return mask_generator.generate(image)
