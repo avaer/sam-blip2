@@ -87,10 +87,18 @@ def get_labeled_bbox(img_file: UploadFile = File(...)):
 
 @app.post("/get_boxes")
 def get_boxes(img_file: UploadFile = File(...)):
-    pil_image = Image.open(img_file.file).convert("RGB")
+    pil_image = Image.open(img_file.file).convert("L")
     image = np.array(pil_image)
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
+    # Resize the image
+    height, width = image.shape[:2]
+    # Define the new width and height
+    new_width = 512
+    new_height = int(new_width * (height / width))
+
+    # Resize the image
+    image = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_AREA)
     print("Extracting captioned Bounding boxes for image")
 
     # extract masks
@@ -137,8 +145,16 @@ def get_boxes(img_file: UploadFile = File(...)):
     for mask in masks:
         json_masks.append(mask['bbox'])
     
+    # map the bounding boxes back to the original image size
+    for json_mask in json_masks:
+        json_mask[0] = int(json_mask[0] * (width / new_width))
+        json_mask[1] = int(json_mask[1] * (height / new_height))
+        json_mask[2] = int(json_mask[2] * (width / new_width))
+        json_mask[3] = int(json_mask[3] * (height / new_height))
+
     # respond with json. make sureto set the content type to application/json
-    response = JSONResponse(content=json.dumps(json_masks))
+    # response = JSONResponse(content=json.dumps(json_masks))
+    response = JSONResponse(content=json_masks)
     response.headers["content-type"] = "application/json"
     return response
 
@@ -159,6 +175,9 @@ def get_boxes(img_file: UploadFile = File(...)):
     # image_buffer.seek(0)
     # return StreamingResponse(image_buffer, media_type="image/jpeg")
 
+# get the port from the environment
+port = int(os.environ.get("PORT", 8111))
+
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=8111)
+    uvicorn.run(app, host='0.0.0.0', port=port)
