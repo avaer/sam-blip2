@@ -20,5 +20,9 @@ sam.to(device=device)
 # mask_generator = SamAutomaticMaskGenerator(sam)
 
 def extract_masks(image):
-    mask_generator = SamAutomaticMaskGenerator(sam)
+    mask_generator = SamAutomaticMaskGenerator(
+        model=sam,
+        points_per_batch = 128,
+        points_per_side = 20,
+    )
     return mask_generator.generate(image)
