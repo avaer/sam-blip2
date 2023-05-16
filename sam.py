@@ -27,7 +27,7 @@ def extract_masks(image):
     )
     return mask_generator.generate(image)
 
-def get_point_mask(image, x, y):
+def extract_point_mask(image, x, y):
     predictor = SamPredictor(sam)
 
     predictor.set_image(image)
