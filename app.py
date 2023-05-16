@@ -89,7 +89,7 @@ def get_labeled_bbox(img_file: UploadFile = File(...)):
 def get_boxes(img_file: UploadFile = File(...)):
     pil_image = Image.open(img_file.file).convert("L")
     image = np.array(pil_image)
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
     # Resize the image
     height, width = image.shape[:2]
