@@ -26,3 +26,21 @@ def extract_masks(image):
         points_per_side = 20,
     )
     return mask_generator.generate(image)
+
+def get_point_mask(image, x, y):
+    predictor = SamPredictor(sam)
+
+    predictor.set_image(image)
+
+    input_point = np.array([[x, y]])
+    input_label = np.array([1])
+
+    masks, scores, logits = predictor.predict(
+        point_coords=input_point,
+        point_labels=input_label,
+        multimask_output=True,
+    )
+    # masks.shape  # (number_of_masks) x H x W
+    # num_masks = masks.shape[0]
+
+    return [masks, scores, logits]
