@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import torch
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, Response, File, UploadFile, Form
 from starlette.responses import StreamingResponse
 
 from utils import filter_segmentation, remove_overlaps
@@ -203,7 +203,9 @@ def get_point_mask(x: str = Form(...), y: str = Form(...), img_file: UploadFile 
     # get the bytes of the uint8array, for sending to the client
     top_mask_bytes = top_mask.tobytes()
 
+    # fastapi response
     response = Response(content=top_mask_bytes)
+    # set headers
     response.headers["content-type"] = "application/octet-stream"
     response.headers["X-Dims"] = json.dumps([width, height])
     response.headers["X-Box"] = top_mask_bbox_json_string
