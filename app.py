@@ -3,6 +3,7 @@ import io
 import cv2
 import numpy as np
 from PIL import Image
+import torch
 from fastapi import FastAPI, File, UploadFile, Form
 from starlette.responses import StreamingResponse
 
