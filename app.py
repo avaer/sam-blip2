@@ -29,7 +29,7 @@ def get_labeled_bbox(img_file: UploadFile = File(...)):
     image = np.array(pil_image)
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    print("Extracting captioned Bounding boxes for image")
+    # print("Extracting captioned Bounding boxes for image")
 
     # extract masks
     print("Extracting masks")
