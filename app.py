@@ -155,10 +155,15 @@ def get_boxes(img_file: UploadFile = File(...)):
 
 #     return [masks, scores, logits]
 @app.post("/get_point_mask")
-def get_point_mask(x : int = Form(), y : int = Form(), img_file: UploadFile = File())
+# x : int
+# y : int
+# img_file: UploadFile
+def get_point_mask(x: int, y: int, img_file: UploadFile = File(...)):
     pil_image = Image.open(img_file.file).convert("RGB")
     image = np.array(pil_image)
     # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    print("image shape:", image.shape, "x:", x, "y:", y)
 
     width = image.shape[1]
     height = image.shape[0]
