@@ -208,7 +208,7 @@ def get_point_mask(x: str = Form(...), y: str = Form(...), img_file: UploadFile 
     # set headers
     response.headers["content-type"] = "application/octet-stream"
     response.headers["X-Dims"] = json.dumps([width, height])
-    response.headers["X-Box"] = top_mask_bbox_json_string
+    response.headers["X-Bbox"] = top_mask_bbox_json_string
     return response
 
 # get the port from the environment
