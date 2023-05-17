@@ -194,9 +194,9 @@ def get_point_mask(x: str = Form(...), y: str = Form(...), img_file: UploadFile 
     # convert to torch.Tensor
     top_mask_tensor = torch.from_numpy(top_mask)
     top_mask_bbox = batched_mask_to_box(top_mask_tensor)
+    # convert back to numpy array
+    top_mask_bbox = top_mask_bbox.numpy().tolist()
     top_mask_bbox_json_string = json.dumps(top_mask_bbox)
-    # free the tensor
-    del top_mask_tensor
 
     # convert the top mask to a uint8 array
     top_mask = top_mask.astype(np.uint8)
