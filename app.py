@@ -3,7 +3,7 @@ import io
 import cv2
 import numpy as np
 from PIL import Image
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from starlette.responses import StreamingResponse
 
 from utils import filter_segmentation, remove_overlaps
@@ -155,7 +155,7 @@ def get_boxes(img_file: UploadFile = File(...)):
 
 #     return [masks, scores, logits]
 @app.post("/get_point_mask")
-def get_point_mask(img_file: UploadFile = File(...)):
+def get_point_mask(img_file: UploadFile = File(...), x : int = Form(...), y : int = Form(...))
     pil_image = Image.open(img_file.file).convert("RGB")
     image = np.array(pil_image)
     # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -164,10 +164,10 @@ def get_point_mask(img_file: UploadFile = File(...)):
     height = image.shape[0]
 
     # get x and y parameters (int). they must exist.
-    x = int(request.form.get("x"))
-    y = int(request.form.get("y"))
-    if x is None or y is None:
-        return JSONResponse(content={"error": "x and y parameters must exist and be integers"}, status_code=400)
+    # x = int(request.form.get("x"))
+    # y = int(request.form.get("y"))
+    # if x is None or y is None:
+    #     return JSONResponse(content={"error": "x and y parameters must exist and be integers"}, status_code=400)
 
     # extract masks
     print("getting point masks")
