@@ -35,12 +35,12 @@ def extract_point_mask(image, point, bbox):
 
     input_point = np.array([point])
     input_label = np.array([1])
-    input_boxes = np.array([bbox]) if bbox is not None else None
+    input_box = np.array(bbox) if bbox is not None else None
 
     masks, scores, logits = predictor.predict(
         point_coords=input_point,
         point_labels=input_label,
-        boxes=input_boxes,
+        box=input_box,
         multimask_output=True,
     )
     # masks.shape  # (number_of_masks) x H x W
