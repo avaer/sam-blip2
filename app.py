@@ -7,7 +7,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from starlette.responses import StreamingResponse
 
 from utils import filter_segmentation, remove_overlaps
-from sam import extract_masks
+from sam import extract_masks, extract_point_mask
 from blip2 import get_segment_captions
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
