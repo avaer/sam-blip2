@@ -16,6 +16,7 @@ from starlette.responses import JSONResponse
 import json
 from datetime import datetime
 
+from segment_anything.utils.amg import batched_mask_to_box
 
 app = FastAPI()
 
@@ -130,27 +131,74 @@ def get_boxes(img_file: UploadFile = File(...)):
         json_mask[3] = int(json_mask[3] * (height / new_height))
 
     # respond with json. make sureto set the content type to application/json
-    # response = JSONResponse(content=json.dumps(json_masks))
     response = JSONResponse(content=json_masks)
     response.headers["content-type"] = "application/json"
     return response
 
-    # # show image with all bounding boxes
-    # ax.imshow(image)
-    # ax.axis('off')
 
-    # # Create a new image with the annotations added
-    # fig.canvas.draw()
-    # buf = fig.canvas.buffer_rgba()
-    # new_image = np.asarray(buf)
-    # new_image = cv2.cvtColor(new_image, cv2.COLOR_RGBA2BGR)
+# def get_point_mask(image, x, y):
+#     predictor = SamPredictor(sam)
 
-    # # turn new image to PIL image
-    # new_image = Image.fromarray(new_image)
-    # image_buffer = io.BytesIO()
-    # new_image.save(image_buffer, format="JPEG")
-    # image_buffer.seek(0)
-    # return StreamingResponse(image_buffer, media_type="image/jpeg")
+#     predictor.set_image(image)
+
+#     input_point = np.array([[x, y]])
+#     input_label = np.array([1])
+
+#     masks, scores, logits = predictor.predict(
+#         point_coords=input_point,
+#         point_labels=input_label,
+#         multimask_output=True,
+#     )
+#     # masks.shape  # (number_of_masks) x H x W
+#     number_of_masks = masks.shape[0]
+
+#     return [masks, scores, logits]
+@app.post("/get_point_mask")
+def get_point_mask(img_file: UploadFile = File(...)):
+    pil_image = Image.open(img_file.file).convert("RGB")
+    image = np.array(pil_image)
+    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    width = image.shape[1]
+    height = image.shape[0]
+
+    # get x and y parameters (int). they must exist.
+    x = int(request.form.get("x"))
+    y = int(request.form.get("y"))
+    if x is None or y is None:
+        return JSONResponse(content={"error": "x and y parameters must exist and be integers"}, status_code=400)
+
+    # extract masks
+    print("getting point masks")
+    time = datetime.now()
+    masks, scores, logits = extract_point_mask(image, x, y)
+    endTime = datetime.now()
+    timeDiff = endTime - time
+    num_masks = masks.shape[0]
+    print("got point masks (", timeDiff, ") in", timeDiff.total_seconds(), "seconds")
+
+    # top mask based on score
+    top_mask = None
+    top_score = 0
+    for i in range(num_masks):
+        if scores[i] > top_score:
+            top_mask = masks[i]
+            top_score = scores[i]
+
+    # get the top mask bbox
+    top_mask_bbox = batched_mask_to_box(top_mask)
+    top_mask_bbox_json_string = json.dumps(top_mask_bbox)
+
+    # convert the top mask to a uint8 array
+    top_mask = top_mask.astype(np.uint8)
+    # get the bytes of the uint8array, for sending to the client
+    top_mask_bytes = top_mask.tobytes()
+
+    response = Response(content=top_mask_bytes)
+    response.headers["content-type"] = "application/octet-stream"
+    response.headers["X-Dims"] = json.dumps([width, height])
+    response.headers["X-Box"] = top_mask_bbox_json_string
+    return response
 
 # get the port from the environment
 port = int(os.environ.get("PORT", 8111))
