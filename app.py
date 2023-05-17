@@ -15,6 +15,7 @@ import matplotlib.patches as patches
 from starlette.responses import JSONResponse
 import json
 from datetime import datetime
+import os
 
 from segment_anything.utils.amg import batched_mask_to_box
 
