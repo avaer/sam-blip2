@@ -172,6 +172,8 @@ def get_point_mask(point: str = Form(...), bbox: str = Form(...), img_file: Uplo
     if bbox is not None:
         bbox = json.loads(bbox)
 
+    print("got point and bbox", point, bbox)
+
     # get x and y parameters (int). they must exist.
     # x = int(request.form.get("x"))
     # y = int(request.form.get("y"))
