@@ -28,13 +28,15 @@ def extract_masks(image):
     )
     return mask_generator.generate(image)
 
-def extract_point_mask(image, point, bbox):
+def extract_point_mask(image, points, labels, bbox):
     predictor = SamPredictor(sam)
 
     predictor.set_image(image)
 
-    input_point = np.array([point])
-    input_label = np.array([1])
+    input_point = np.array(points)
+    # array of 1s for each point
+    input_label = np.array(labels)
+    # input_label = np.array([1])
     input_box = np.array(bbox) if bbox is not None else None
 
     masks, scores, logits = predictor.predict(

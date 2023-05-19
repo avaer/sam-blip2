@@ -157,7 +157,7 @@ def get_boxes(img_file: UploadFile = File(...)):
 #     return [masks, scores, logits]
 
 @app.post("/get_point_mask")
-def get_point_mask(point: str = Form(...), bbox: str = Form(None), img_file: UploadFile = Form(...)):
+def get_point_mask(points: str = Form(...), labels: str = Form(None), bbox: str = Form(None), img_file: UploadFile = Form(...)):
     pil_image = Image.open(img_file.file).convert("RGB")
     image = np.array(pil_image)
     # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -166,8 +166,9 @@ def get_point_mask(point: str = Form(...), bbox: str = Form(None), img_file: Upl
     height = image.shape[0]
 
     # parse point json
-    # if point is not None:
-    point = json.loads(point)
+    points = json.loads(points)
+    if labels is None:
+        labels = [1] * len(points)
     # parse bbox json
     if bbox is not None:
         bbox = json.loads(bbox)
@@ -183,7 +184,7 @@ def get_point_mask(point: str = Form(...), bbox: str = Form(None), img_file: Upl
     # extract masks
     print("getting point masks")
     time = datetime.now()
-    masks, scores, logits = extract_point_mask(image, point, bbox)
+    masks, scores, logits = extract_point_mask(image, points, labels, bbox)
     endTime = datetime.now()
     timeDiff = endTime - time
     num_masks = masks.shape[0]
