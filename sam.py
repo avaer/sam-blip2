@@ -24,7 +24,7 @@ def extract_masks(image):
     mask_generator = SamAutomaticMaskGenerator(
         model=sam,
         points_per_batch = 128,
-        points_per_side = 20,
+        points_per_side = 32,
     )
     return mask_generator.generate(image)
 
