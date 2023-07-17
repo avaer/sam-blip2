@@ -1,2 +1,17 @@
 # sam-blip2
-A simple repo that is used to experiment with the Segment Anything Model by FAIR and blip2 for labelling
+Contains image segemntation AI models
+
+## Install
+
+Required packages are listed in:
+
+```
+conda.txt
+pip.txt
+```
+
+## Run
+
+```
+python app.py
+```
