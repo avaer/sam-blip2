@@ -14,5 +14,5 @@ pip.txt
 ## Run
 
 ```
-python app.py
+PORT=8111 python app.py
 ```
