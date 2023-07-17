@@ -1,0 +1,170 @@
+# packages in environment at /home/ubuntu/miniconda3/envs/sam:
+#
+# Name                    Version                   Build  Channel
+_libgcc_mutex             0.1                        main  
+_openmp_mutex             5.1                       1_gnu  
+absl-py                   1.4.0                    pypi_0    pypi
+antlr4-python3-runtime    4.9.3                    pypi_0    pypi
+anyio                     3.6.2                    pypi_0    pypi
+argon2-cffi               21.3.0                   pypi_0    pypi
+argon2-cffi-bindings      21.2.0                   pypi_0    pypi
+attrs                     22.2.0                   pypi_0    pypi
+backcall                  0.2.0                    pypi_0    pypi
+beautifulsoup4            4.12.1                   pypi_0    pypi
+black                     23.3.0                   pypi_0    pypi
+bleach                    6.0.0                    pypi_0    pypi
+ca-certificates           2023.01.10           h06a4308_0  
+cachetools                5.3.0                    pypi_0    pypi
+certifi                   2022.12.7                pypi_0    pypi
+cffi                      1.15.1                   pypi_0    pypi
+charset-normalizer        3.1.0                    pypi_0    pypi
+click                     8.1.3                    pypi_0    pypi
+cloudpickle               2.2.1                    pypi_0    pypi
+cmake                     3.25.0                   pypi_0    pypi
+cudatoolkit               11.8.0               h6a678d5_0  
+cycler                    0.11.0                   pypi_0    pypi
+debugpy                   1.6.6                    pypi_0    pypi
+decorator                 5.1.1                    pypi_0    pypi
+defusedxml                0.7.1                    pypi_0    pypi
+entrypoints               0.4                      pypi_0    pypi
+fastapi                   0.95.0                   pypi_0    pypi
+fastjsonschema            2.16.3                   pypi_0    pypi
+filelock                  3.10.7                   pypi_0    pypi
+fonttools                 4.38.0                   pypi_0    pypi
+ftfy                      6.1.1                    pypi_0    pypi
+fvcore                    0.1.5.post20221221          pypi_0    pypi
+google-auth               2.17.1                   pypi_0    pypi
+google-auth-oauthlib      0.4.6                    pypi_0    pypi
+grpcio                    1.53.0                   pypi_0    pypi
+h11                       0.14.0                   pypi_0    pypi
+huggingface-hub           0.13.3                   pypi_0    pypi
+hydra-core                1.3.2                    pypi_0    pypi
+idna                      3.4                      pypi_0    pypi
+importlib-metadata        6.1.0                    pypi_0    pypi
+importlib-resources       5.12.0                   pypi_0    pypi
+iopath                    0.1.9                    pypi_0    pypi
+ipykernel                 6.16.2                   pypi_0    pypi
+ipython                   7.34.0                   pypi_0    pypi
+ipython-genutils          0.2.0                    pypi_0    pypi
+ipywidgets                8.0.6                    pypi_0    pypi
+jedi                      0.18.2                   pypi_0    pypi
+jinja2                    3.1.2                    pypi_0    pypi
+jsonschema                4.17.3                   pypi_0    pypi
+jupyter                   1.0.0                    pypi_0    pypi
+jupyter-client            7.4.9                    pypi_0    pypi
+jupyter-console           6.6.3                    pypi_0    pypi
+jupyter-core              4.12.0                   pypi_0    pypi
+jupyter-server            1.23.6                   pypi_0    pypi
+jupyterlab-pygments       0.2.2                    pypi_0    pypi
+jupyterlab-widgets        3.0.7                    pypi_0    pypi
+kiwisolver                1.4.4                    pypi_0    pypi
+ld_impl_linux-64          2.38                 h1181459_1  
+libffi                    3.4.4                h6a678d5_0  
+libgcc-ng                 11.2.0               h1234567_1  
+libgomp                   11.2.0               h1234567_1  
+libstdcxx-ng              11.2.0               h1234567_1  
+lit                       15.0.7                   pypi_0    pypi
+markdown                  3.4.3                    pypi_0    pypi
+markupsafe                2.1.2                    pypi_0    pypi
+matplotlib                3.5.3                    pypi_0    pypi
+matplotlib-inline         0.1.6                    pypi_0    pypi
+mistune                   2.0.5                    pypi_0    pypi
+mpmath                    1.2.1                    pypi_0    pypi
+mypy-extensions           1.0.0                    pypi_0    pypi
+nbclassic                 0.5.5                    pypi_0    pypi
+nbclient                  0.7.3                    pypi_0    pypi
+nbconvert                 7.3.0                    pypi_0    pypi
+nbformat                  5.8.0                    pypi_0    pypi
+ncurses                   6.4                  h6a678d5_0  
+nest-asyncio              1.5.6                    pypi_0    pypi
+networkx                  3.0                      pypi_0    pypi
+notebook                  6.5.4                    pypi_0    pypi
+notebook-shim             0.2.3                    pypi_0    pypi
+numpy                     1.21.1                   pypi_0    pypi
+nvidia-cublas-cu11        11.10.3.66               pypi_0    pypi
+nvidia-cuda-nvrtc-cu11    11.7.99                  pypi_0    pypi
+nvidia-cuda-runtime-cu11  11.7.99                  pypi_0    pypi
+nvidia-cudnn-cu11         8.5.0.96                 pypi_0    pypi
+oauthlib                  3.2.2                    pypi_0    pypi
+omegaconf                 2.3.0                    pypi_0    pypi
+openai-clip               1.0.1                    pypi_0    pypi
+opencv-python             4.7.0.72                 pypi_0    pypi
+openssl                   1.1.1t               h7f8727e_0  
+packaging                 23.0                     pypi_0    pypi
+pandocfilters             1.5.0                    pypi_0    pypi
+parso                     0.8.3                    pypi_0    pypi
+pathspec                  0.11.1                   pypi_0    pypi
+pexpect                   4.8.0                    pypi_0    pypi
+pickleshare               0.7.5                    pypi_0    pypi
+pillow                    9.5.0                    pypi_0    pypi
+pip                       23.0.1           py39h06a4308_0  
+pkgutil-resolve-name      1.3.10                   pypi_0    pypi
+platformdirs              3.2.0                    pypi_0    pypi
+portalocker               2.7.0                    pypi_0    pypi
+prometheus-client         0.16.0                   pypi_0    pypi
+prompt-toolkit            3.0.38                   pypi_0    pypi
+protobuf                  3.20.3                   pypi_0    pypi
+psutil                    5.9.4                    pypi_0    pypi
+ptyprocess                0.7.0                    pypi_0    pypi
+pyasn1                    0.4.8                    pypi_0    pypi
+pyasn1-modules            0.2.8                    pypi_0    pypi
+pycocotools               2.0.6                    pypi_0    pypi
+pycparser                 2.21                     pypi_0    pypi
+pydantic                  1.10.7                   pypi_0    pypi
+pygments                  2.14.0                   pypi_0    pypi
+pyparsing                 3.0.9                    pypi_0    pypi
+pyrsistent                0.19.3                   pypi_0    pypi
+python                    3.9.16               h7a1cb2a_2  
+python-dateutil           2.8.2                    pypi_0    pypi
+python-multipart          0.0.6                    pypi_0    pypi
+pyyaml                    6.0                      pypi_0    pypi
+pyzmq                     25.0.2                   pypi_0    pypi
+qtconsole                 5.4.2                    pypi_0    pypi
+qtpy                      2.3.1                    pypi_0    pypi
+readline                  8.2                  h5eee18b_0  
+regex                     2022.10.31               pypi_0    pypi
+requests                  2.28.2                   pypi_0    pypi
+requests-oauthlib         1.3.1                    pypi_0    pypi
+rsa                       4.9                      pypi_0    pypi
+segment-anything          1.0                      pypi_0    pypi
+send2trash                1.8.0                    pypi_0    pypi
+setuptools                67.8.0           py39h06a4308_0  
+six                       1.16.0                   pypi_0    pypi
+sniffio                   1.3.0                    pypi_0    pypi
+soupsieve                 2.4                      pypi_0    pypi
+sqlite                    3.41.2               h5eee18b_0  
+starlette                 0.26.1                   pypi_0    pypi
+sympy                     1.11.1                   pypi_0    pypi
+tabulate                  0.9.0                    pypi_0    pypi
+tensorboard               2.11.2                   pypi_0    pypi
+tensorboard-data-server   0.6.1                    pypi_0    pypi
+tensorboard-plugin-wit    1.8.1                    pypi_0    pypi
+termcolor                 2.2.0                    pypi_0    pypi
+terminado                 0.17.1                   pypi_0    pypi
+tinycss2                  1.2.1                    pypi_0    pypi
+tk                        8.6.12               h1ccaba5_0  
+tokenizers                0.13.3                   pypi_0    pypi
+tomli                     2.0.1                    pypi_0    pypi
+torch                     2.0.1+cu118              pypi_0    pypi
+torchvision               0.15.2+cu118             pypi_0    pypi
+tornado                   6.2                      pypi_0    pypi
+tqdm                      4.65.0                   pypi_0    pypi
+traitlets                 5.9.0                    pypi_0    pypi
+transformers              4.27.4                   pypi_0    pypi
+triton                    2.0.0                    pypi_0    pypi
+typed-ast                 1.5.4                    pypi_0    pypi
+typing-extensions         4.5.0                    pypi_0    pypi
+tzdata                    2023c                h04d1e81_0  
+urllib3                   1.26.15                  pypi_0    pypi
+uvicorn                   0.21.1                   pypi_0    pypi
+wcwidth                   0.2.6                    pypi_0    pypi
+webencodings              0.5.1                    pypi_0    pypi
+websocket-client          1.5.1                    pypi_0    pypi
+werkzeug                  2.2.3                    pypi_0    pypi
+wget                      3.2                      pypi_0    pypi
+wheel                     0.38.4           py39h06a4308_0  
+widgetsnbextension        4.0.7                    pypi_0    pypi
+xz                        5.4.2                h5eee18b_0  
+yacs                      0.1.8                    pypi_0    pypi
+zipp                      3.15.0                   pypi_0    pypi
+zlib                      1.2.13               h5eee18b_0  
