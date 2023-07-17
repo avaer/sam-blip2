@@ -1,5 +1,6 @@
 # sam-blip2
-Contains image segemntation AI models
+
+Segment-Anything image segemntation AI models
 
 ## Install
 
