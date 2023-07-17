@@ -19,6 +19,7 @@ from datetime import datetime
 import os
 
 from segment_anything.utils.amg import batched_mask_to_box
+from PIL import Image, ImageOps
 
 app = FastAPI()
 
@@ -44,7 +45,7 @@ def get_labeled_bbox(img_file: UploadFile = File(...)):
     lower_area = image_area * (0.05 ** 2)
     upper_area = image_area * (0.8 ** 2)
     masks = filter_segmentation(masks, lower_area, upper_area)
-    masks = remove_overlaps(masks, 0.01)
+    # masks = remove_overlaps(masks, 0.01)
     print("Filtered masks to", len(masks))
 
     # get captions
@@ -138,36 +139,83 @@ def get_boxes(img_file: UploadFile = File(...)):
     return response
 
 
-# def get_point_mask(image, x, y):
-#     predictor = SamPredictor(sam)
+# @app.post("/get_boxes_raw")
+# def get_boxes(img_file: UploadFile = File(...)):
+#     pil_image = Image.open(img_file.file).convert("L")
+#     image = np.array(pil_image)
+#     image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
-#     predictor.set_image(image)
+#     # Resize the image
+#     height, width = image.shape[:2]
+#     # Define the new width and height
+#     new_width = 512
+#     new_height = int(new_width * (height / width))
 
-#     input_point = np.array([[x, y]])
-#     input_label = np.array([1])
+#     # Resize the image
+#     image = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_AREA)
+#     print("Extracting captioned Bounding boxes for image")
 
-#     masks, scores, logits = predictor.predict(
-#         point_coords=input_point,
-#         point_labels=input_label,
-#         multimask_output=True,
-#     )
-#     # masks.shape  # (number_of_masks) x H x W
-#     number_of_masks = masks.shape[0]
+#     # extract masks
+#     print("Extracting masks")
+#     time = datetime.now()
+#     masks = extract_masks(image)
+#     endTime = datetime.now()
+#     timeDiff = endTime - time
+#     print("Extracted", len(masks), "masks in", timeDiff.total_seconds(), "seconds")
 
-#     return [masks, scores, logits]
+#     # filter masks
+#     image_area = image.shape[0] * image.shape[1]
+#     lower_area = image_area * (0.05 ** 2)
+#     upper_area = image_area * (0.8 ** 2)
+#     masks = filter_segmentation(masks, lower_area, upper_area)
+#     masks = remove_overlaps(masks, 0.01)
+#     print("Filtered masks to", len(masks))
+
+#     # convert masks to json
+#     json_masks = []
+#     for mask in masks:
+#         json_masks.append(mask['bbox'])
+    
+#     # map the bounding boxes back to the original image size
+#     for json_mask in json_masks:
+#         json_mask[0] = int(json_mask[0] * (width / new_width))
+#         json_mask[1] = int(json_mask[1] * (height / new_height))
+#         json_mask[2] = int(json_mask[2] * (width / new_width))
+#         json_mask[3] = int(json_mask[3] * (height / new_height))
+
+#     # respond with json. make sureto set the content type to application/json
+#     response = JSONResponse(content=json_masks)
+#     response.headers["content-type"] = "application/json"
+#     return response
 
 @app.post("/get_point_mask")
-def get_point_mask(points: str = Form(...), labels: str = Form(None), bbox: str = Form(None), img_file: UploadFile = Form(...)):
-    pil_image = Image.open(img_file.file).convert("RGB")
-    image = np.array(pil_image)
-    # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+def get_point_mask(points: str = Form(None), labels: str = Form(None), bbox: str = Form(None), img_file: UploadFile = Form(...)):
+    # pil_image = Image.open(img_file.file)
+    # # remove exif transpose
+    # pil_image = ImageOps.exif_transpose(pil_image)
+    # pil_image = pil_image.convert("RGB")
+    # image = np.array(pil_image)
+    # # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    # read image with cv2, as RGB
+    image = cv2.imdecode(np.fromstring(img_file.file.read(), np.uint8), cv2.IMREAD_COLOR)
+    # ensure image is RGB. in case it had an alpha channel, remove it.
+    if image.shape[2] == 4:
+        image = image[:, :, :3]
+    # convert to numpy array
+    image = np.array(image)
 
     width = image.shape[1]
     height = image.shape[0]
 
-    # parse point json
-    points = json.loads(points)
-    if labels is None:
+    # parse arguments
+    if points is not None:
+        points = json.loads(points)
+    else:
+        points = []
+    if labels is not None:
+        labels = json.loads(labels)
+    else:
         labels = [1] * len(points)
     # parse bbox json
     if bbox is not None:
@@ -188,7 +236,7 @@ def get_point_mask(points: str = Form(...), labels: str = Form(None), bbox: str 
     endTime = datetime.now()
     timeDiff = endTime - time
     num_masks = masks.shape[0]
-    print("got point masks (", timeDiff, ") in", timeDiff.total_seconds(), "seconds")
+    print("got point masks n = ", str(num_masks), " in", timeDiff.total_seconds(), "seconds")
 
     # top mask based on score
     top_mask = None
