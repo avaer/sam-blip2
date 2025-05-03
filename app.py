@@ -136,6 +136,7 @@ def get_boxes(img_file: UploadFile = File(...)):
     # respond with json. make sureto set the content type to application/json
     response = JSONResponse(content=json_masks)
     response.headers["content-type"] = "application/json"
+    response.headers["x-dims"] = json.dumps([width, height])
     return response
 
 
