@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 import torch
 from fastapi import FastAPI, Response, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import StreamingResponse
 
 from utils import filter_segmentation, remove_overlaps
@@ -22,6 +23,15 @@ from segment_anything.utils.amg import batched_mask_to_box
 from PIL import Image, ImageOps
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],        # ← or list specific origins
+    allow_credentials=True,
+    allow_methods=["*"],        # ← GET, POST, PUT, DELETE, OPTIONS, …
+    allow_headers=["*"],        # ← Authorization, Content-Type, …
+    expose_headers=["X-Dims", "X-Bbox"],
+)
 
 @app.post("/get_labeled_bbox")
 def get_labeled_bbox(img_file: UploadFile = File(...)):
