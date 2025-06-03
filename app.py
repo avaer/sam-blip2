@@ -302,9 +302,9 @@ def get_all_masks(img_file: UploadFile = File(...), max_masks: int = 16):
     image_area = image.shape[0] * image.shape[1]
     lower_area = image_area * (0.01)
     upper_area = image_area * (0.5)
-    confidence_threshold = 0.1
+    confidence_threshold = 0.25
     masks = filter_segmentation(masks, lower_area, upper_area, confidence_threshold)
-    masks = remove_overlaps(masks, 0.5)
+    # masks = remove_overlaps(masks, 0.5)
     print("Filtered masks to", len(masks))
     
     # Limit masks to max_masks parameter
