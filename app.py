@@ -312,18 +312,12 @@ def get_all_masks(img_file: UploadFile = File(...), max_masks: int = 16):
         masks = masks[:max_masks]
         print(f"Clamped masks to {max_masks}")
 
-    # Create a single array where each pixel value represents its mask index
-    # Initialize with -1 (no mask)
-    combined_mask = np.full((height, width), -1, dtype=np.int8)
+    # Create a flat array of all masks concatenated together
+    # Each mask is flattened and appended to the array
+    combined_mask = np.concatenate([mask['segmentation'].flatten() for mask in masks])
     
-    # For each mask, set its pixels to the mask index
-    for i, mask in enumerate(masks):
-        mask_array = mask['segmentation']
-        # Only replace pixels that are -1 (no mask)
-        combined_mask[np.logical_and(mask_array, combined_mask == -1)] = i
-
-    # Ensure array is in row-major order (C-style) and flattened
-    combined_mask = np.ascontiguousarray(combined_mask)
+    # Convert to int8 and ensure contiguous memory layout
+    combined_mask = np.ascontiguousarray(combined_mask.astype(np.uint8))
     combined_mask_bytes = combined_mask.tobytes()
 
     # Create response with binary data
