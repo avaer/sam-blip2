@@ -8,7 +8,7 @@ from fastapi import FastAPI, Response, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import StreamingResponse
 
-from utils import filter_segmentation, remove_overlaps
+from utils import filter_segmentation, filter_confidence, filter_area_confidence, remove_overlaps
 from sam import extract_masks, extract_point_mask
 from blip2 import get_segment_captions
 import matplotlib.pyplot as plt
@@ -30,7 +30,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],        # ← GET, POST, PUT, DELETE, OPTIONS, …
     allow_headers=["*"],        # ← Authorization, Content-Type, …
-    expose_headers=["X-Dims", "X-Bbox"],
+    expose_headers=["X-Dims", "X-Bbox", "X-Num-Masks"],
 )
 
 @app.post("/get_labeled_bbox")
@@ -199,6 +199,8 @@ def get_boxes(img_file: UploadFile = File(...)):
 #     response.headers["content-type"] = "application/json"
 #     return response
 
+
+
 @app.post("/get_point_mask")
 def get_point_mask(points: str = Form(None), labels: str = Form(None), bbox: str = Form(None), img_file: UploadFile = Form(...)):
     # pil_image = Image.open(img_file.file)
@@ -276,6 +278,59 @@ def get_point_mask(points: str = Form(None), labels: str = Form(None), bbox: str
     response.headers["content-type"] = "application/octet-stream"
     response.headers["X-Dims"] = json.dumps([width, height])
     response.headers["X-Bbox"] = top_mask_bbox_json_string
+    return response
+
+@app.post("/get_all_masks")
+def get_all_masks(img_file: UploadFile = File(...)):
+    # Read and convert image
+    pil_image = Image.open(img_file.file).convert("RGB")
+    image = np.array(pil_image)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    # Get image dimensions
+    height, width = image.shape[:2]
+
+    # Extract masks
+    print("Extracting masks")
+    time = datetime.now()
+    masks = extract_masks(image)
+    endTime = datetime.now()
+    timeDiff = endTime - time
+    print("Extracted", len(masks), "masks in", timeDiff.total_seconds(), "seconds")
+
+    # Filter masks
+    image_area = image.shape[0] * image.shape[1]
+    lower_area = image_area * (0.05 ** 2)
+    upper_area = image_area * (0.5)
+    confidence_threshold = 0.1
+    masks = filter_segmentation(masks, lower_area, upper_area, confidence_threshold)
+    masks = remove_overlaps(masks, 0.5)
+    # masks = filter_area_confidence(masks, 0.5, 16)
+    print("Filtered masks to", len(masks))
+    
+    if len(masks) > 127:
+        masks = masks[:127]
+        print("Clamped masks to 127")
+
+    # Create a single array where each pixel value represents its mask index
+    # Initialize with -1 (no mask)
+    combined_mask = np.full((height, width), -1, dtype=np.int8)
+    
+    # For each mask, set its pixels to the mask index
+    for i, mask in enumerate(masks):
+        mask_array = mask['segmentation']
+        # Only replace pixels that are -1 (no mask)
+        combined_mask[np.logical_and(mask_array, combined_mask == -1)] = i
+
+    # Ensure array is in row-major order (C-style) and flattened
+    combined_mask = np.ascontiguousarray(combined_mask)
+    combined_mask_bytes = combined_mask.tobytes()
+
+    # Create response with binary data
+    response = Response(content=combined_mask_bytes)
+    response.headers["content-type"] = "application/octet-stream"
+    response.headers["x-dims"] = json.dumps([width, height])
+    response.headers["x-num-masks"] = str(len(masks))
     return response
 
 # get the port from the environment

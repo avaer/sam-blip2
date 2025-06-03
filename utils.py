@@ -14,6 +14,40 @@ def filter_segmentation(masks, lower_size_threshold, upper_size_threshold, confi
         confidence = mask['predicted_iou']
         if lower_size_threshold < area < upper_size_threshold and confidence > confidence_threshold:
             filtered_masks.append(mask)
+    filtered_masks.sort(key=lambda x: x['area'], reverse=True)
+    return filtered_masks
+
+def filter_confidence(masks, n=10):
+    """Filter segmentation masks to top n confidences.
+
+    Args:
+        masks [dict[area, predicted_iou, bbox]]: Segmentation
+        n (int): Number of masks to keep
+    """
+    filtered_masks = []
+    # Sort masks by confidence score
+    sorted_masks = sorted(masks, key=lambda x: x['predicted_iou'], reverse=True)
+    
+    # Keep only the top n masks
+    filtered_masks = sorted_masks[:n]
+    
+    return filtered_masks
+
+def filter_area_confidence(masks, confidence=0.5, n=10):
+    """Filter segmentation masks to top n confidences by area with confidence threshold.
+
+    Args:
+        masks [dict[area, predicted_iou, bbox]]: Segmentation
+        confidence (float): Confidence threshold
+        n (int): Number of masks to keep
+    """
+    # Filter by confidence first
+    filtered_masks = [mask for mask in masks if mask['predicted_iou'] > confidence]
+    
+    # Sort by area and get top n
+    filtered_masks.sort(key=lambda x: x['area'], reverse=True)
+    filtered_masks = filtered_masks[:n]
+    
     return filtered_masks
 
 def remove_overlaps(masks, intersection_threshold=0.5):
