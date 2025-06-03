@@ -281,7 +281,7 @@ def get_point_mask(points: str = Form(None), labels: str = Form(None), bbox: str
     return response
 
 @app.post("/get_all_masks")
-def get_all_masks(img_file: UploadFile = File(...)):
+def get_all_masks(img_file: UploadFile = File(...), max_masks: int = 16):
     # Read and convert image
     pil_image = Image.open(img_file.file).convert("RGB")
     image = np.array(pil_image)
@@ -305,12 +305,12 @@ def get_all_masks(img_file: UploadFile = File(...)):
     confidence_threshold = 0.1
     masks = filter_segmentation(masks, lower_area, upper_area, confidence_threshold)
     masks = remove_overlaps(masks, 0.5)
-    # masks = filter_area_confidence(masks, 0.5, 16)
     print("Filtered masks to", len(masks))
     
-    if len(masks) > 127:
-        masks = masks[:127]
-        print("Clamped masks to 127")
+    # Limit masks to max_masks parameter
+    if len(masks) > max_masks:
+        masks = masks[:max_masks]
+        print(f"Clamped masks to {max_masks}")
 
     # Create a single array where each pixel value represents its mask index
     # Initialize with -1 (no mask)
