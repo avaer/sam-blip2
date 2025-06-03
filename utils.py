@@ -1,3 +1,4 @@
+import numpy as np
 
 def filter_segmentation(masks, lower_size_threshold, upper_size_threshold, confidence_threshold=0.9):
     """Filter segmentation masks based on size and confidence.
@@ -10,9 +11,10 @@ def filter_segmentation(masks, lower_size_threshold, upper_size_threshold, confi
     """
     filtered_masks = []
     for mask in masks:
-        area = mask['area']
+        area = np.sum(mask['segmentation'])
         confidence = mask['predicted_iou']
         if lower_size_threshold < area < upper_size_threshold and confidence > confidence_threshold:
+            mask['area'] = area  # Store computed area in mask dict
             filtered_masks.append(mask)
     filtered_masks.sort(key=lambda x: x['area'], reverse=True)
     return filtered_masks

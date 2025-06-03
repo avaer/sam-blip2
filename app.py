@@ -300,7 +300,7 @@ def get_all_masks(img_file: UploadFile = File(...)):
 
     # Filter masks
     image_area = image.shape[0] * image.shape[1]
-    lower_area = image_area * (0.05 ** 2)
+    lower_area = image_area * (0.01)
     upper_area = image_area * (0.5)
     confidence_threshold = 0.1
     masks = filter_segmentation(masks, lower_area, upper_area, confidence_threshold)
